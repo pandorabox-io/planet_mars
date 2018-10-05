@@ -59,6 +59,7 @@ end
 
 -- TODO: chernobylite in the center
 -- TODO: ores around it (dessertstone-ores)
+-- https://github.com/minetest/minetest_game/blob/e10e0f94d6339cef1f38e27acd98cf85d8e5fef5/mods/default/nodes.lua#L1134
 
 register_ore({
 	id = minetest.get_content_id("default:stone_with_diamond"),
