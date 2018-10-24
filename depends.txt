@@ -1,5 +1,3 @@
 default
-vacuum?
-technic_worldgen?
-technic?
+vacuum
 bedrock?
