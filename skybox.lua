@@ -1,11 +1,15 @@
 local has_skybox_mod = minetest.get_modpath("skybox")
 
+local min_y = planet_mars.y_start
+local cave_end_y = planet_mars.y_start + (planet_mars.y_height * 0.97)
+local max_y = planet_mars.y_start + planet_mars.y_skybox_height
+
 if has_skybox_mod then
 	skybox.register({
 		-- http://www.custommapmakers.org/skyboxes.php
 		name = "mars",
-		miny = planet_mars.y_start,
-		maxy = planet_mars.y_start + planet_mars.y_skybox_height,
+		miny = cave_end_y,
+		maxy = max_y,
 		gravity = 0.37,
 		always_day = true,
 		clouds = {
@@ -24,5 +28,15 @@ if has_skybox_mod then
 			"mars_lf.jpg",
 			"mars_rt.jpg"
 		}
+	})
+
+	skybox.register({
+		name = "mars_cave",
+		miny = min_y,
+		maxy = cave_end_y,
+		gravity = 0.37,
+		always_day = true,
+		sky_type = "regular",
+		sky_color = {r=244, g=189, b=114}
 	})
 end
