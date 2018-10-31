@@ -24,8 +24,22 @@ local mountain_params = {
 	persist = 0.5
 }
 
+-- clay noise
+local clay_params = {
+	offset = 0,
+	scale = 2,
+	spread = {x=2048, y=2048, z=2048},
+	seed = 981364,
+	octaves = 2,
+	persist = 0.6
+}
+
+-- TODO: caves with air
+
 
 local c_base = minetest.get_content_id("default:desert_stone")
+-- XXX local c_base = minetest.get_content_id("air")
+local c_stone = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
@@ -42,10 +56,12 @@ local y_height = planet_mars.y_height
 -- perlin noise
 local height_perlin
 local mountain_perlin
+local clay_perlin
 
 -- reuse maps
 local height_perlin_map = {}
 local mountain_perlin_map = {}
+local clay_perlin_map = {}
 
 minetest.register_on_generated(function(minp, maxp, seed)
 
@@ -63,9 +79,11 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	height_perlin = height_perlin or minetest.get_perlin_map(height_params, map_lengths_xyz)
 	mountain_perlin = mountain_perlin or minetest.get_perlin_map(mountain_params, map_lengths_xyz)
+	clay_perlin = clay_perlin or minetest.get_perlin_map(clay_params, map_lengths_xyz)
 
 	height_perlin:get2dMap_flat({x=minp.x, y=minp.z}, height_perlin_map)
 	mountain_perlin:get2dMap_flat({x=minp.x, y=minp.z}, mountain_perlin_map)
+	clay_perlin:get3dMap_flat(minp, clay_perlin_map)
 
 	local perlin_index = 1
 	local height_fill_factor = 0.8
@@ -75,11 +93,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	for x=minp.x,maxp.x do
 
 		-- normalized factor from 0...1
-		local height_perlin_factor = math.min(1, math.abs( height_perlin_map[perlin_index] * 0.2 ) )
-		--local mountain_perlin_factor = math.min(1, math.abs( mountain_perlin_map[perlin_index] * 0.2 ) )
+		local height_perlin_factor = math.min(1, math.abs( height_perlin_map[perlin_index] * 0.1 ) )
+		local mountain_perlin_factor = math.min(1, math.abs( mountain_perlin_map[perlin_index] * 0.18 ) )
 
 		-- weighted hill top and solid bottom
 		local abs_height = y_start + (y_height * 0.99) + (y_height * height_perlin_factor * 0.01)
+		local abs_mountain_height = y_start + (y_height * 0.9) + (y_height * mountain_perlin_factor * 0.1)
 		
 		for y=minp.y,maxp.y do
 			local index = area:index(x,y,z)
@@ -91,6 +110,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			elseif y < abs_height then
 				-- solid
 				data[index] = c_base
+
+			elseif y < abs_mountain_height then
+				-- mountain
+				data[index] = c_stone
 
 			elseif y < abs_height + 2 then
 				-- top layer
@@ -105,6 +128,24 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 		perlin_index = perlin_index + 1
 	end --x
+	end --z
+ 
+	perlin_index = 1
+
+	-- generate ores
+	for z=minp.z,maxp.z do
+	for y=minp.y,maxp.y do
+	for x=minp.x,maxp.x do
+		local index = area:index(x,y,z)
+
+		if clay_perlin_map[perlin_index] > 0.5 and data[index] == c_base then
+			-- clay
+			data[index] = c_clay
+		end
+
+		perlin_index = perlin_index + 1
+	end --x
+	end --y
 	end --z
  
  
