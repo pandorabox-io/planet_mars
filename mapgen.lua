@@ -27,18 +27,18 @@ local mountain_params = {
 -- clay noise
 local clay_params = {
 	offset = 0,
-	scale = 2,
-	spread = {x=2048, y=2048, z=2048},
+	scale = 1,
+	spread = {x=32, y=64, z=64},
 	seed = 981364,
 	octaves = 2,
-	persist = 0.6
+	persist = 0.5
 }
 
 -- TODO: caves with air
 
 
-local c_base = minetest.get_content_id("default:desert_stone")
--- XXX local c_base = minetest.get_content_id("air")
+--XXX local c_base = minetest.get_content_id("default:desert_stone")
+local c_base = minetest.get_content_id("default:glass")
 local c_stone = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
 local c_air = minetest.get_content_id("air")
@@ -138,7 +138,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	for x=minp.x,maxp.x do
 		local index = area:index(x,y,z)
 
-		if clay_perlin_map[perlin_index] > 0.5 and data[index] == c_base then
+		if math.abs(clay_perlin_map[perlin_index]) > 0.5 and data[index] == c_base then
 			-- clay
 			data[index] = c_clay
 		end
