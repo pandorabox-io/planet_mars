@@ -1,4 +1,5 @@
 local has_bedrock_mod = minetest.get_modpath("bedrock")
+local has_vacuum_mod = minetest.get_modpath("vacuum")
 
 -- http://dev.minetest.net/PerlinNoiseMap
 -- https://github.com/pyrollo/cratermg/blob/master/init.lua (thx Pyrollo:)
@@ -49,13 +50,17 @@ local cave_params = {
 
 
 local c_base = minetest.get_content_id("default:desert_stone")
-c_base = minetest.get_content_id("default:glass") --XXX
 local c_stone = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
 local c_dirt = minetest.get_content_id("default:dirt")
 local c_meselamp = minetest.get_content_id("default:meselamp")
 local c_air = minetest.get_content_id("air")
-local c_ignore = minetest.get_content_id("ignore")
+local c_vacuum = c_air
+
+if has_vacuum_mod then
+	c_vacuum = minetest.get_content_id("vacuum:vacuum")
+end
+
 local c_clay = minetest.get_content_id("default:clay")
 local c_bedrock = c_base
 
@@ -138,7 +143,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 			else
 				-- non-solid
-				data[index] = c_air
+				data[index] = c_vacuum
 			end
 
 		end --y
@@ -159,10 +164,14 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		local is_cave = math.abs(cave_perlin_map[perlin_index]) > 0.5
 		local is_cave_dirt = math.abs(cave_perlin_map[perlin_index]) < 0.55
 
+		local is_deep = y < (y_start + (y_height * 0.95))
+
 		if data[index] == c_base then
 			-- base material found
 
-			if is_cave then
+			if is_cave and is_deep then
+				-- caves only deep below
+
 				if is_cave_dirt then
 					-- cave with dirt and lamps
 					if math.random(0, 15) == 1 then
@@ -178,8 +187,9 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			elseif is_clay then
 				-- clay deposit
 				data[index] = c_clay
+
 			end
-			-- TODO: trees/grass
+			-- TODO: trees/grass?
 		end
 
 		perlin_index = perlin_index + 1
