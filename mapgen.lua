@@ -1,31 +1,23 @@
 local has_bedrock_mod = minetest.get_modpath("bedrock")
 
 -- http://dev.minetest.net/PerlinNoiseMap
+-- https://github.com/pyrollo/cratermg/blob/master/init.lua (thx Pyrollo:)
+
 
 -- basic planet height noise
-local base_params = {
-   offset = 0,
-   scale = 1,
-   spread = {x=1024, y=512, z=1024},
-   seed = 3468584,
-   octaves = 5,
-   persist = 0.6
-}
-
--- ore params
-local ore_params = {
-   offset = 0,
-   scale = 1,
-   spread = {x=128, y=64, z=128},
-   seed = 935472,
-   octaves = 4,
-   persist = 0.6
+local height_params = {
+	offset = 0,
+	scale = 5,
+	spread = {x=256, y=256, z=256},
+	seed = 1337,
+	octaves = 2,
+	persist = 0.5
 }
 
 local c_base = minetest.get_content_id("default:desert_stone")
+local c_sand = minetest.get_content_id("default:desert_sand")
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
-local c_vacuum = minetest.get_content_id("vacuum:vacuum")
 local c_clay = minetest.get_content_id("default:clay")
 local c_bedrock
 
@@ -33,14 +25,14 @@ if has_bedrock_mod then
 	c_bedrock = minetest.get_content_id("bedrock:bedrock")
 end
 
-local y_min = 11000
-local y_max = 11280
-local y_diff = y_max - y_min
+local y_start = planet_mars.y_start
+local y_height = planet_mars.y_height
 
 
 minetest.register_on_generated(function(minp, maxp, seed)
 
-	if minp.y < y_min or minp.y > y_max then
+	if minp.y < y_start or minp.y > (y_start + y_height) then
+		-- not in range
 		return
 	end
 
@@ -48,44 +40,45 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	local area = VoxelArea:new{MinEdge=emin, MaxEdge=emax}
 	local data = vm:get_data()
 
-	local is_solid = minp.y < y_min+100
-
 	local side_length = maxp.x - minp.x + 1 -- 80
 	local map_lengths_xyz = {x=side_length, y=side_length, z=side_length}
 
-	local base_perlin_map = minetest.get_perlin_map(base_params, map_lengths_xyz):get3dMap_flat(minp)
-	local ore_perlin_map = minetest.get_perlin_map(ore_params, map_lengths_xyz):get3dMap_flat(minp)
+	local height_perlin_map = minetest.get_perlin_map(height_params, map_lengths_xyz):get2dMap_flat({x=minp.x, y=minp.z})
 
-	local i = 1
+
+	local perlin_index = 1
+	local height_fill_factor = 0.8
+	local height_hill_factor = 1 - height_fill_factor
 
 	for z=minp.z,maxp.z do
-	for y=minp.y,maxp.y do
 	for x=minp.x,maxp.x do
 
-		local index = area:index(x,y,z)
+		-- normalized factor from 0...1
+		local perlin_factor = math.min(1, math.abs( height_perlin_map[perlin_index] * 0.2 ) )
 
-		if y >= y_min and y < y_min+10 and has_bedrock_mod then
-			data[index] = c_bedrock
+		-- weighted hill top and solid bottom
+		local abs_height = y_start + (y_height * 0.9) + (y_height * perlin_factor * 0.1)
+		
+		for y=minp.y,maxp.y do
+			local index = area:index(x,y,z)
 
-		elseif data[index] == c_air or data[index] == c_vacuum or data[index] == c_ignore then
-			-- unpopulated node
-
-			-- higher elevation = lower chance
-			local chance = (y-minp.y) / side_length
-
-			local base_n = math.min(0, base_perlin_map[i] + 1)
-			local ore_n = ore_perlin_map[i]
-
-			if is_solid or base_n > chance then
-				-- basic material
+			if y < abs_height then
+				-- solid
 				data[index] = c_base
+
+			elseif y < abs_height + 2 then
+				-- top layer
+				data[index] = c_sand
+
+			else
+				-- non-solid
+				data[index] = c_air
 			end
-		end
 
-		i = i + 1
+		end --y
 
+		perlin_index = perlin_index + 1
 	end --x
-	end --y
 	end --z
  
  
@@ -95,4 +88,3 @@ minetest.register_on_generated(function(minp, maxp, seed)
 end)
 
 
-print("[OK] Planet: mars")
