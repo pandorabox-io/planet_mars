@@ -9,17 +9,19 @@ local height_params = {
 	offset = 0,
 	scale = 5,
 	spread = {x=256, y=256, z=256},
-	seed = 1337,
+	seed = 5477835,
 	octaves = 2,
 	persist = 0.5
 }
+
+
 
 local c_base = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
 local c_air = minetest.get_content_id("air")
 local c_ignore = minetest.get_content_id("ignore")
 local c_clay = minetest.get_content_id("default:clay")
-local c_bedrock
+local c_bedrock = c_base
 
 if has_bedrock_mod then
 	c_bedrock = minetest.get_content_id("bedrock:bedrock")
@@ -57,12 +59,16 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		local perlin_factor = math.min(1, math.abs( height_perlin_map[perlin_index] * 0.2 ) )
 
 		-- weighted hill top and solid bottom
-		local abs_height = y_start + (y_height * 0.9) + (y_height * perlin_factor * 0.1)
+		local abs_height = y_start + (y_height * 0.99) + (y_height * perlin_factor * 0.01)
 		
 		for y=minp.y,maxp.y do
 			local index = area:index(x,y,z)
 
-			if y < abs_height then
+			if y <  y_start + 10 then
+				-- bedrock (if available)
+				data[index] = c_bedrock
+
+			elseif y < abs_height then
 				-- solid
 				data[index] = c_base
 

@@ -1,8 +1,16 @@
 planet_mars = {
-	-- technic EU storage value
+	-- starting height of mars terrain
 	y_start = tonumber(minetest.settings:get("planet_mars.y_start")) or 11000,
-	y_height = tonumber(minetest.settings:get("planet_mars.y_height")) or 500,
-	y_skybox_height = tonumber(minetest.settings:get("planet_mars.y_skybox_height")) or 1000,
+
+	-- end height of terrain (relative to start)
+	y_height = tonumber(minetest.settings:get("planet_mars.y_height")) or 5000,
+
+	-- height of clouds (relative to start)
+	y_cloud_height = tonumber(minetest.settings:get("planet_mars.y_skybox_height")) or 5300,
+
+	-- end height of skybox (relative to start)
+	y_skybox_height = tonumber(minetest.settings:get("planet_mars.y_skybox_height")) or 6000,
+
 }
 
 local MP = minetest.get_modpath("planet_mars")
