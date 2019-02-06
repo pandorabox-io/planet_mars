@@ -36,7 +36,7 @@ if has_skybox_mod then
 		maxy = cave_end_y,
 		gravity = 0.37,
 		always_day = true,
-		sky_type = "regular",
+		sky_type = "plain",
 		sky_color = {r=244, g=189, b=114}
 	})
 end
