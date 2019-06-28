@@ -199,6 +199,11 @@ minetest.register_on_generated(function(minp, maxp, seed)
  
  
 	vm:set_data(data)
+
+	if maxp.y < y_start + (y_height * 0.95) then
+		minetest.generate_decorations(vm, minp, maxp)
+	end
+
 	vm:set_lighting({day=15, night=0})
 	vm:write_to_map()
 
