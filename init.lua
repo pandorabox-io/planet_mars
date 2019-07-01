@@ -18,6 +18,5 @@ dofile(MP.."/nodes.lua")
 dofile(MP.."/ores.lua")
 dofile(MP.."/mapgen.lua")
 dofile(MP.."/skybox.lua")
-dofile(MP.."/vacuum.lua")
 
 print("[OK] Planet: mars (start: " .. planet_mars.y_start .. ", height:" .. planet_mars.y_height .. ")")
