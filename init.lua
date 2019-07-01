@@ -15,6 +15,7 @@ planet_mars = {
 
 local MP = minetest.get_modpath("planet_mars")
 dofile(MP.."/nodes.lua")
+dofile(MP.."/ores.lua")
 dofile(MP.."/mapgen.lua")
 dofile(MP.."/skybox.lua")
 dofile(MP.."/vacuum.lua")

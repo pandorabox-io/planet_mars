@@ -25,15 +25,6 @@ local mountain_params = {
 	persist = 0.5
 }
 
--- clay noise
-local clay_params = {
-	offset = 0,
-	scale = 1,
-	spread = {x=32, y=16, z=48},
-	seed = 17893325,
-	octaves = 2,
-	persist = 0.5
-}
 
 -- clay noise
 local cave_params = {
@@ -61,7 +52,6 @@ if has_vacuum_mod then
 	c_vacuum = minetest.get_content_id("vacuum:vacuum")
 end
 
-local c_clay = minetest.get_content_id("default:clay")
 local c_bedrock = c_base
 
 if has_bedrock_mod then
@@ -74,13 +64,11 @@ local y_height = planet_mars.y_height
 -- perlin noise
 local height_perlin
 local mountain_perlin
-local clay_perlin
 local cave_perlin
 
 -- reuse maps
 local height_perlin_map = {}
 local mountain_perlin_map = {}
-local clay_perlin_map = {}
 local cave_perlin_map = {}
 
 minetest.register_on_generated(function(minp, maxp, seed)
@@ -99,17 +87,14 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	height_perlin = height_perlin or minetest.get_perlin_map(height_params, map_lengths_xyz)
 	mountain_perlin = mountain_perlin or minetest.get_perlin_map(mountain_params, map_lengths_xyz)
-	clay_perlin = clay_perlin or minetest.get_perlin_map(clay_params, map_lengths_xyz)
+
 	cave_perlin = cave_perlin or minetest.get_perlin_map(cave_params, map_lengths_xyz)
 
 	height_perlin:get2dMap_flat({x=minp.x, y=minp.z}, height_perlin_map)
 	mountain_perlin:get2dMap_flat({x=minp.x, y=minp.z}, mountain_perlin_map)
-	clay_perlin:get3dMap_flat(minp, clay_perlin_map)
 	cave_perlin:get3dMap_flat(minp, cave_perlin_map)
 
 	local perlin_index = 1
-	local height_fill_factor = 0.8
-	local height_hill_factor = 1 - height_fill_factor
 
 	for z=minp.z,maxp.z do
 	for x=minp.x,maxp.x do
@@ -121,7 +106,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		-- weighted hill top and solid bottom
 		local abs_height = y_start + (y_height * 0.99) + (y_height * height_perlin_factor * 0.01)
 		local abs_mountain_height = y_start + (y_height * 0.9) + (y_height * mountain_perlin_factor * 0.1)
-		
+
 		for y=minp.y,maxp.y do
 			local index = area:index(x,y,z)
 
@@ -151,7 +136,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 		perlin_index = perlin_index + 1
 	end --x
 	end --z
- 
+
 	perlin_index = 1
 
 	-- generate ores
@@ -160,7 +145,6 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	for x=minp.x,maxp.x do
 		local index = area:index(x,y,z)
 
-		local is_clay = math.abs(clay_perlin_map[perlin_index]) > 0.5
 		local is_cave = math.abs(cave_perlin_map[perlin_index]) > 0.5
 		local is_cave_dirt = math.abs(cave_perlin_map[perlin_index]) < 0.55
 
@@ -184,24 +168,20 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					data[index] = c_air
 				end
 
-			elseif is_clay then
-				-- clay deposit
-				data[index] = c_clay
-
 			end
-			-- TODO: trees/grass?
 		end
 
 		perlin_index = perlin_index + 1
 	end --x
 	end --y
 	end --z
- 
- 
+
 	vm:set_data(data)
 
 	if maxp.y < y_start + (y_height * 0.95) then
+		-- create decos and ores below certain depth
 		minetest.generate_decorations(vm, minp, maxp)
+		minetest.generate_ores(vm, minp, maxp)
 	end
 
 	vm:set_lighting({day=15, night=0})
