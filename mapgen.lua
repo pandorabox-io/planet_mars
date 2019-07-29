@@ -43,7 +43,8 @@ local cave_params = {
 local c_base = minetest.get_content_id("default:desert_stone")
 local c_stone = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
-local c_dirt = minetest.get_content_id("default:dirt")
+-- local c_dirt = minetest.get_content_id("default:dirt")
+local c_dirt_with_grass = minetest.get_content_id("default:dirt_with_grass")
 local c_meselamp = minetest.get_content_id("default:meselamp")
 local c_air = minetest.get_content_id("air")
 local c_vacuum = c_air
@@ -155,13 +156,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 			if is_cave and is_deep then
 				-- caves only deep below
-
 				if is_cave_dirt then
 					-- cave with dirt and lamps
 					if math.random(0, 15) == 1 then
 						data[index] = c_meselamp
 					else
-						data[index] = c_dirt
+						data[index] = c_dirt_with_grass
 					end
 				else
 					-- cave with air
