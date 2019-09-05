@@ -155,7 +155,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	end --x
 	end --z
 
-	perlin_index = 1
+	local perlin_index_2d = 1
+	local perlin_index_3d = 1
 
 	-- generate caves
 	for z=minp.z,maxp.z do
@@ -163,8 +164,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	for x=minp.x,maxp.x do
 		local index = area:index(x,y,z)
 
-		local is_cave = math.abs(cave_perlin_map[perlin_index]) > 0.5
-		local is_cave_dirt = math.abs(cave_perlin_map[perlin_index]) < 0.55
+		local is_cave = math.abs(cave_perlin_map[perlin_index_3d]) > 0.5
+		local is_cave_dirt = math.abs(cave_perlin_map[perlin_index_3d]) < 0.55
 
 		local is_deep = y < (y_start + (y_height * 0.95))
 
@@ -176,7 +177,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 				if is_cave_dirt then
 
 					-- normalized factor from 0...1
-					local biome_perlin_factor = math.min(1, math.abs( biome_perlin_map[perlin_index] * 0.1 ) )
+					local biome_perlin_factor = math.min(1, math.abs( biome_perlin_map[perlin_index_2d] * 0.1 ) )
 
 					if biome_perlin_factor > 0.9 then
 						data[index] = c_base
@@ -207,8 +208,12 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			end
 		end
 
-		perlin_index = perlin_index + 1
+		perlin_index_3d = perlin_index_3d + 1
+		perlin_index_2d = perlin_index_2d + 1
 	end --x
+
+	perlin_index_2d = z - minp.z + 1
+
 	end --y
 	end --z
 
