@@ -18,5 +18,5 @@ read_globals = {
 	"dump", "VoxelArea",
 
 	-- Deps
-	"default", "gravity_manager"
+	"default", "gravity_manager", "bamboo"
 }
