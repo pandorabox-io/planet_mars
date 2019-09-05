@@ -105,10 +105,10 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	biome_perlin = biome_perlin or minetest.get_perlin_map(biome_params, map_lengths_xyz)
 	cave_perlin = cave_perlin or minetest.get_perlin_map(cave_params, map_lengths_xyz)
 
-	height_perlin:get2dMap_flat({x=minp.x, y=minp.z}, height_perlin_map)
-	mountain_perlin:get2dMap_flat({x=minp.x, y=minp.z}, mountain_perlin_map)
-	biome_perlin:get2dMap_flat({x=minp.x, y=minp.z}, biome_perlin_map)
-	cave_perlin:get3dMap_flat(minp, cave_perlin_map)
+	height_perlin:get_2d_map_flat({x=minp.x, y=minp.z}, height_perlin_map)
+	mountain_perlin:get_2d_map_flat({x=minp.x, y=minp.z}, mountain_perlin_map)
+	biome_perlin:get_2d_map_flat({x=minp.x, y=minp.z}, biome_perlin_map)
+	cave_perlin:get_3d_map_flat(minp, cave_perlin_map)
 
 	-- TODO: surface/cave y-check for perfomance
 
@@ -224,5 +224,3 @@ minetest.register_on_generated(function(minp, maxp, seed)
 	vm:write_to_map()
 
 end)
-
-
