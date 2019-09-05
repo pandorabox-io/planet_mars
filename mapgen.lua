@@ -55,6 +55,7 @@ local c_dirt_with_rainforest_litter = minetest.get_content_id("default:dirt_with
 local c_dirt_with_dry_grass = minetest.get_content_id("default:dirt_with_dry_grass")
 local c_dirt_with_coniferous_litter = minetest.get_content_id("default:dirt_with_coniferous_litter")
 local c_dirt_with_snow = minetest.get_content_id("default:dirt_with_snow")
+local c_permafrost = minetest.get_content_id("default:permafrost")
 
 local c_air = minetest.get_content_id("air")
 local c_airlight = minetest.get_content_id("planet_mars:airlight")
@@ -185,6 +186,8 @@ minetest.register_on_generated(function(minp, maxp, seed)
 						data[index] = c_dirt_with_coniferous_litter
 					elseif biome_perlin_factor > 0.4 then
 						data[index] = c_dirt_with_rainforest_litter
+					elseif biome_perlin_factor > 0.3 then
+						data[index] = c_permafrost
 					elseif biome_perlin_factor > 0.1 then
 						data[index] = c_dirt_with_grass
 					else
