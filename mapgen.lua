@@ -25,7 +25,6 @@ local mountain_params = {
 	persist = 0.5
 }
 
-
 -- clay noise
 local cave_params = {
 	offset = 0,
@@ -36,17 +35,29 @@ local cave_params = {
 	persist = 0.5
 }
 
-
-
+-- cave biomes
+local biome_params = {
+	offset = 0,
+	scale = 5,
+	spread = {x=256, y=256, z=256},
+	seed = 5477835,
+	octaves = 2,
+	persist = 0.5
+}
 
 
 local c_base = minetest.get_content_id("default:desert_stone")
 local c_stone = minetest.get_content_id("default:desert_stone")
 local c_sand = minetest.get_content_id("default:desert_sand")
--- local c_dirt = minetest.get_content_id("default:dirt")
+
 local c_dirt_with_grass = minetest.get_content_id("default:dirt_with_grass")
-local c_meselamp = minetest.get_content_id("default:meselamp")
+local c_dirt_with_rainforest_litter = minetest.get_content_id("default:dirt_with_rainforest_litter")
+local c_dirt_with_dry_grass = minetest.get_content_id("default:dirt_with_dry_grass")
+local c_dirt_with_coniferous_litter = minetest.get_content_id("default:dirt_with_coniferous_litter")
+local c_dirt_with_snow = minetest.get_content_id("default:dirt_with_snow")
+
 local c_air = minetest.get_content_id("air")
+local c_airlight = minetest.get_content_id("planet_mars:airlight")
 local c_vacuum = c_air
 
 if has_vacuum_mod then
@@ -66,11 +77,13 @@ local y_height = planet_mars.y_height
 local height_perlin
 local mountain_perlin
 local cave_perlin
+local biome_perlin
 
 -- reuse maps
 local height_perlin_map = {}
 local mountain_perlin_map = {}
 local cave_perlin_map = {}
+local biome_perlin_map = {}
 
 minetest.register_on_generated(function(minp, maxp, seed)
 
@@ -88,12 +101,15 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	height_perlin = height_perlin or minetest.get_perlin_map(height_params, map_lengths_xyz)
 	mountain_perlin = mountain_perlin or minetest.get_perlin_map(mountain_params, map_lengths_xyz)
-
+	biome_perlin = biome_perlin or minetest.get_perlin_map(biome_params, map_lengths_xyz)
 	cave_perlin = cave_perlin or minetest.get_perlin_map(cave_params, map_lengths_xyz)
 
 	height_perlin:get2dMap_flat({x=minp.x, y=minp.z}, height_perlin_map)
 	mountain_perlin:get2dMap_flat({x=minp.x, y=minp.z}, mountain_perlin_map)
+	biome_perlin:get2dMap_flat({x=minp.x, y=minp.z}, biome_perlin_map)
 	cave_perlin:get3dMap_flat(minp, cave_perlin_map)
+
+	-- TODO: surface/cave y-check for perfomance
 
 	local perlin_index = 1
 
@@ -140,7 +156,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 
 	perlin_index = 1
 
-	-- generate ores
+	-- generate caves
 	for z=minp.z,maxp.z do
 	for y=minp.y,maxp.y do
 	for x=minp.x,maxp.x do
@@ -157,15 +173,32 @@ minetest.register_on_generated(function(minp, maxp, seed)
 			if is_cave and is_deep then
 				-- caves only deep below
 				if is_cave_dirt then
-					-- cave with dirt and lamps
-					if math.random(0, 15) == 1 then
-						data[index] = c_meselamp
-					else
+
+					-- normalized factor from 0...1
+					local biome_perlin_factor = math.min(1, math.abs( biome_perlin_map[perlin_index] * 0.1 ) )
+
+					if biome_perlin_factor > 0.9 then
+						data[index] = c_sand
+					elseif biome_perlin_factor > 0.7 then
+						data[index] = c_dirt_with_dry_grass
+					elseif biome_perlin_factor > 0.5 then
+						data[index] = c_dirt_with_coniferous_litter
+					elseif biome_perlin_factor > 0.4 then
+						data[index] = c_dirt_with_rainforest_litter
+					elseif biome_perlin_factor > 0.1 then
 						data[index] = c_dirt_with_grass
+					else
+						data[index] = c_dirt_with_snow
 					end
+
 				else
 					-- cave with air
-					data[index] = c_air
+					if math.random(0, 5) == 1 then
+						-- light source
+						data[index] = c_airlight
+					else
+						data[index] = c_air
+					end
 				end
 
 			end
