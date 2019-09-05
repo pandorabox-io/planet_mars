@@ -179,7 +179,7 @@ minetest.register_on_generated(function(minp, maxp, seed)
 					local biome_perlin_factor = math.min(1, math.abs( biome_perlin_map[perlin_index] * 0.1 ) )
 
 					if biome_perlin_factor > 0.9 then
-						data[index] = c_sand
+						data[index] = c_base
 					elseif biome_perlin_factor > 0.7 then
 						data[index] = c_dirt_with_dry_grass
 					elseif biome_perlin_factor > 0.5 then
