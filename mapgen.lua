@@ -86,7 +86,7 @@ local mountain_perlin_map = {}
 local cave_perlin_map = {}
 local biome_perlin_map = {}
 
-minetest.register_on_generated(function(minp, maxp, seed)
+minetest.register_on_generated(function(minp, maxp)
 
 	if minp.y < y_start or minp.y > (y_start + y_height) then
 		-- not in range
