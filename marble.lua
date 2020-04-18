@@ -50,4 +50,23 @@ for _, color in ipairs({"red", "blue", "black"}) do
 		y_max          = planet_mars.y_start + planet_mars.y_height,
 		y_min          = planet_mars.y_start,
 	})
+
+	stairsplus:register_all("planet_mars", color .. "marble",  "planet_mars:" .. color .. "marble", {
+	  description = color .. " marble",
+	  tiles = {"planet_mars_" .. color .. "marble.png"},
+	  groups = {cracky=3}
+	})
+
+	stairsplus:register_all("planet_mars", color .. "marble_bricks",  "planet_mars:" .. color .. "marble_bricks", {
+	  description = color .. " marble bricks",
+	  tiles = {"planet_mars_" .. color .. "marble_bricks.png"},
+	  groups = {cracky=3}
+	})
+
+	stairsplus:register_all("planet_mars", color .. "marble_polished",  "planet_mars:" .. color .. "marble_polished", {
+	  description = color .. " marble polished",
+	  tiles = {"planet_mars_" .. color .. "marble_polished.png"},
+	  groups = {cracky=3}
+	})
+
 end
