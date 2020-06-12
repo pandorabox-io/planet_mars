@@ -1,4 +1,7 @@
 
+-- TODO: move to own modpack?
+-- maybe "colored_marbles" and alias morebblock somehow
+
 for _, color in ipairs({"red", "blue", "black"}) do
 
 	minetest.register_craft({
