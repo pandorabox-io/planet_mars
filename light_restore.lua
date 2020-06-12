@@ -2,7 +2,7 @@
 local y_start = planet_mars.y_start
 local y_height = planet_mars.y_height
 
--- airlight resoration abm
+-- airlight restoration abm
 -- slowly reclaims dark spaces on mars
 minetest.register_abm({
   label = "space vacuum",
