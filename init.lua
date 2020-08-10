@@ -14,6 +14,7 @@ planet_mars = {
 }
 
 local MP = minetest.get_modpath("planet_mars")
+dofile(MP.."/api.lua")
 dofile(MP.."/decorations.lua")
 dofile(MP.."/airlight.lua")
 dofile(MP.."/nodes.lua")
@@ -23,5 +24,6 @@ dofile(MP.."/skybox.lua")
 dofile(MP.."/vacuum.lua")
 dofile(MP.."/marble.lua")
 dofile(MP.."/light_restore.lua")
+dofile(MP.."/light_restore_command.lua")
 
 print("[OK] Planet: mars (start: " .. planet_mars.y_start .. ", height:" .. planet_mars.y_height .. ")")
