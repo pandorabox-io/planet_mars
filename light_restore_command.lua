@@ -33,7 +33,7 @@ minetest.register_chatcommand("mars_lightup", {
 		end
 
 		manip:set_light_data(data)
-		manip:write_to_map()
+		manip:write_to_map(false)
 
 		local diff = minetest.get_us_time() - start
 		local millis = math.floor(diff / 1000)
