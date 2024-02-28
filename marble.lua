@@ -22,7 +22,7 @@ for _, color in ipairs({"red", "blue", "black"}) do
 	minetest.register_node("planet_mars:" .. color .. "marble_polished", {
 		description = "polished " .. color .. " marble",
 		tiles = {"planet_mars_" .. color .. "marble_polished.png"},
-		is_ground_content = true,
+		is_ground_content = false,
 		groups = {cracky=3},
 		sounds = default.node_sound_stone_defaults(),
 	})
@@ -30,7 +30,7 @@ for _, color in ipairs({"red", "blue", "black"}) do
 	minetest.register_node("planet_mars:" .. color .. "marble_bricks", {
 		description = color .. " marble bricks",
 		tiles = {"planet_mars_" .. color .. "marble_bricks.png"},
-		is_ground_content = true,
+		is_ground_content = false,
 		groups = {cracky=3},
 		sounds = default.node_sound_stone_defaults(),
 	})
