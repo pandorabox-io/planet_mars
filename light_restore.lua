@@ -1,7 +1,7 @@
 -- TODO: figure out a way to _properly_ solve this without abm and vmanip hacks!
 
 -- airlight restoration abm
--- slowly reclaims dark spaces on mars
+-- slowly reclaims dark spaces on Mars
 minetest.register_abm({
   label = "mars airlight",
   nodenames = {"air"},
@@ -12,7 +12,7 @@ minetest.register_abm({
 
     -- check coordinates
     if not planet_mars.is_pos_on_mars(pos) then
-      -- we are not on mars, no replacementsare done here
+      -- we are not on Mars, no replacementsare done here
       return
     end
 
