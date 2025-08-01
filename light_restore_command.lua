@@ -1,13 +1,13 @@
 
 minetest.register_chatcommand("mars_lightup", {
-	description = "restores the airlights on mars around the player position",
+	description = "Lights up area around player position on/in Mars",
 	func = function(name)
 		local player = minetest.get_player_by_name(name)
 		local pos = vector.round(player:get_pos())
 
 		if not planet_mars.is_pos_on_mars(pos) then
-			-- TODO: only light up in mars _caves_
-			return false, "You are not on mars!"
+			-- TODO: only light up in Mars _caves_
+			return false, "You are not on or in Mars!"
 		end
 
 		local start = minetest.get_us_time()
