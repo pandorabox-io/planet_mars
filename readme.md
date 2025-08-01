@@ -1,9 +1,9 @@
-Planet mars mod for minetest
+Planet Mars mod for Luanti (Minetest)
 
 
 # Overview
 
-A mars planetary layer with underground caves
+A Mars planetary layer with underground caves
 
 # Mapgen
 
