@@ -1,5 +1,5 @@
 planet_mars = {
-	-- starting height of mars terrain
+	-- starting height of Mars terrain
 	y_start = tonumber(minetest.settings:get("planet_mars.y_start")) or 11000,
 
 	-- end height of terrain (relative to start)
@@ -26,4 +26,4 @@ dofile(MP.."/marble.lua")
 dofile(MP.."/light_restore.lua")
 dofile(MP.."/light_restore_command.lua")
 
-print("[OK] Planet: mars (start: " .. planet_mars.y_start .. ", height:" .. planet_mars.y_height .. ")")
+print("[OK] Planet: Mars (start: " .. planet_mars.y_start .. ", height:" .. planet_mars.y_height .. ")")
