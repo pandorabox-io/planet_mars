@@ -10,11 +10,11 @@ if has_vacuum_mod then
 	vacuum.is_pos_in_space = function(pos)
 
 		if pos.y < y_start or pos.y > (y_start + (y_height * 0.95)) then
-			-- not on mars
+			-- not on Mars
 			return old_is_pos_in_space(pos)
 		end
 
-		-- atmosphere in mars caves
+		-- atmosphere in Mars caves
 		return false
 	end
 
